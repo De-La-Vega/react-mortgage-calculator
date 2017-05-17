@@ -44,3 +44,13 @@ export function calcDuration (sum, monthly, rate) {
     if (monthly - sum * rate <= 0) return 1000000;
     return logN(monthly / (monthly - sum * rate), 1 + rate);
 }
+
+/**
+ * beautifyAmount
+ * 
+ * @param {number} value 1000000
+ * @returns {number} 1 000 000
+ */
+export function beautifyAmount (value) {
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}

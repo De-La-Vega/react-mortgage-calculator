@@ -1,8 +1,12 @@
-.form-horizontal .control-label {
-    text-align: left;
+label {
     font-weight: normal;
 }
 
-label {
-    font-weight: normal;
+.section-col {
+    margin-bottom: 12px;
+}
+.section-title,
+.section-input,
+.section-slider {
+    margin-bottom: 4px;
 }

@@ -13,40 +13,53 @@ class MortgageCalculator extends React.Component {
 
         this.recursionFlag = false;
         this.state = {
-            apartmentPrice: {
+            [SECTION_CAMEL_CASE.ApartmentPrice]: {
                 min: 0,
                 max: 100000000,
                 current: 0
             },
-            firstPayment: {
+            [SECTION_CAMEL_CASE.FirstPayment]: {
                 min: 0,
                 max: 0,
                 current: 0
             },
-            creditSum: {
+            [SECTION_CAMEL_CASE.CreditSum]: {
                 min: 0,
                 max: 0,
                 current: 0,
                 isFixed: false
             },
-            creditDuration: {
+            [SECTION_CAMEL_CASE.CreditDuration]: {
                 min: 1,
                 max: 240,
                 current: 60,
                 isFixed: false
             },
-            creditRate: {
+            [SECTION_CAMEL_CASE.CreditRate]: {
                 min: 0,
                 max: 100,
                 current: 12
             },
-            monthlyPayment: {
+            [SECTION_CAMEL_CASE.MonthlyPayment]: {
                 min: 0,
                 max: 0,
                 current: 0,
                 isFixed: false
             }
         }
+    }
+
+    returnResults () {
+        const {state} = this;
+
+        this.props.getResults({
+            [SECTION_CAMEL_CASE.ApartmentPrice]: state[SECTION_CAMEL_CASE.ApartmentPrice].current,
+            [SECTION_CAMEL_CASE.FirstPayment]: state[SECTION_CAMEL_CASE.FirstPayment].current,
+            [SECTION_CAMEL_CASE.CreditSum]: state[SECTION_CAMEL_CASE.CreditSum].current,
+            [SECTION_CAMEL_CASE.CreditDuration]: state[SECTION_CAMEL_CASE.CreditDuration].current,
+            [SECTION_CAMEL_CASE.CreditRate]: state[SECTION_CAMEL_CASE.CreditRate].current,
+            [SECTION_CAMEL_CASE.MonthlyPayment]: state[SECTION_CAMEL_CASE.MonthlyPayment].current,
+        });
     }
 
     /**
@@ -64,6 +77,7 @@ class MortgageCalculator extends React.Component {
             return updateState(cloneDeep(prevState), sectionName, value);
         }, () => {
             this.recursionFlag = false;
+            this.props.getResults && this.returnResults();
         });
     }
 
@@ -206,7 +220,8 @@ MortgageCalculator.defaultProps = {
 MortgageCalculator.propTypes = {
     children: PropTypes.array.isRequired,
     inputClassName: PropTypes.string,
-    logEvents: PropTypes.bool
+    logEvents: PropTypes.bool,
+    getResults: PropTypes.func
 };
 
 export default MortgageCalculator;

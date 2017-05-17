@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+// import {beautifyAmount} from './../Utils/Utils';
+
 export default class Input extends React.Component {
     render () {
         let {placeholder, onChange, className, value, disabled} = this.props;
@@ -11,7 +13,7 @@ export default class Input extends React.Component {
                 type="text"
                 className={className}
                 placeholder={placeholder}
-                value={value}
+                value={value.toFixed(0)}
                 disabled={disabled}
             />
         );
