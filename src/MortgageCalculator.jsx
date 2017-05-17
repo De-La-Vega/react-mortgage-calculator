@@ -2,15 +2,16 @@ import React, {Children, cloneElement} from 'react';
 import PropTypes from 'prop-types';
 import {cloneDeep} from 'lodash';
 
-import {lowerFirstLetter} from './Utils';
-
 import Section from './Components/Section';
 
-import {SECTION} from './consts';
+import {SECTION, SECTION_CAMEL_CASE} from './consts';
+import {updateState} from './Utils/StateUpdateUtils';
 
 class MortgageCalculator extends React.Component {
     constructor(props){
         super(props);
+
+        this.recursionFlag = false;
         this.state = {
             apartmentPrice: {
                 min: 0,
@@ -56,34 +57,13 @@ class MortgageCalculator extends React.Component {
      * @returns {void}
      */
     setGeneralState (sectionName, value) {
+        if (this.recursionFlag) return;
+        this.recursionFlag = true;
+
         this.setState((prevState) => {
-            const lowerSectionApartmentPrice = lowerFirstLetter(SECTION.ApartmentPrice);
-            const lowerSectionFirstPayment = lowerFirstLetter(SECTION.FirstPayment);
-            const lowerSectionCreditSum = lowerFirstLetter(SECTION.CreditSum);
-
-            if (sectionName === SECTION.ApartmentPrice) {
-                let newValueApartmentPrice = cloneDeep(prevState[lowerSectionApartmentPrice]);
-                let newValueFirstPayment = cloneDeep(prevState[lowerSectionFirstPayment]);
-                let newValueCreditSum = cloneDeep(prevState[lowerSectionCreditSum]);
-
-                newValueApartmentPrice.current = value;
-                newValueFirstPayment.max = value;
-                newValueCreditSum.max = value;
-
-                return {
-                    [lowerSectionApartmentPrice]: newValueApartmentPrice,
-                    [lowerSectionFirstPayment]: newValueFirstPayment,
-                    [lowerSectionCreditSum]: newValueCreditSum
-
-                }
-            } else {
-                let newValue = cloneDeep(prevState[lowerFirstLetter(sectionName)]);
-                newValue.current = value;
-
-                return {
-                    [lowerFirstLetter(sectionName)]: newValue
-                }
-            }
+            return updateState(cloneDeep(prevState), sectionName, value);
+        }, () => {
+            this.recursionFlag = false;
         });
     }
 
@@ -95,7 +75,7 @@ class MortgageCalculator extends React.Component {
      * @returns {void}
      */
     onChangeInput (sectionName, value) {
-        console.log("onChangeInput (" + sectionName + "):", value);
+        this.props.logEvents && console.log("onChangeInput (" + sectionName + "):", value);
 
         this.setGeneralState(sectionName, value);
     }
@@ -108,7 +88,7 @@ class MortgageCalculator extends React.Component {
      * @returns {void}
      */
     onChangeSlider (sectionName, value) {
-        console.log("onChangeSlider (" + sectionName + "):", value);
+        this.props.logEvents && console.log("onChangeSlider (" + sectionName + "):", value);
 
         this.setGeneralState(sectionName, value);
     }
@@ -121,15 +101,30 @@ class MortgageCalculator extends React.Component {
      * @returns {void}
      */
     onChangeCheckbox (sectionName, value) {
-        console.log("onChangeCheckbox (" + sectionName + "):", value);
+        this.props.logEvents && console.log("onChangeCheckbox (" + sectionName + "):", value);
 
         this.setState((prevState) => {
-            let newValue = cloneDeep(prevState[lowerFirstLetter(sectionName)]);
-            newValue.isFixed = value;
+            let newState = cloneDeep(prevState);
 
-            return {
-                [lowerFirstLetter(sectionName)]: newValue
+            switch (sectionName) {
+                case SECTION.CreditSum:
+                    newState[SECTION_CAMEL_CASE.CreditSum].isFixed = value;
+                    newState[SECTION_CAMEL_CASE.CreditDuration].isFixed = false;
+                    newState[SECTION_CAMEL_CASE.MonthlyPayment].isFixed = false;
+                    break;
+                case SECTION.CreditDuration:
+                    newState[SECTION_CAMEL_CASE.CreditSum].isFixed = false;
+                    newState[SECTION_CAMEL_CASE.CreditDuration].isFixed = value;
+                    newState[SECTION_CAMEL_CASE.MonthlyPayment].isFixed = false;
+                    break;
+                case SECTION.MonthlyPayment:
+                    newState[SECTION_CAMEL_CASE.CreditSum].isFixed = false;
+                    newState[SECTION_CAMEL_CASE.CreditDuration].isFixed = false;
+                    newState[SECTION_CAMEL_CASE.MonthlyPayment].isFixed = value;
+                    break;
             }
+
+            return newState;
         });
     }
 
@@ -140,13 +135,14 @@ class MortgageCalculator extends React.Component {
      * @returns {object} object with values
      */
     getValues (sectionName) {
-        const sectionState = this.state[lowerFirstLetter(sectionName)];
+        const sectionState = this.state[SECTION_CAMEL_CASE[sectionName]];
         const hasCheckbox = [
             SECTION.CreditSum,
             SECTION.CreditDuration,
             SECTION.MonthlyPayment
         ];
         let values = {
+            inputClassName: this.props.inputClassName,
             inputValue: sectionState.current,
             sliderMinValue: sectionState.min,
             sliderMaxValue: sectionState.max,
@@ -203,7 +199,14 @@ class MortgageCalculator extends React.Component {
 }
 
 MortgageCalculator.defaultProps = {
-    children: PropTypes.element.isRequired
+    inputClassName: '',
+    checkboxClassName: ''
+};
+
+MortgageCalculator.propTypes = {
+    children: PropTypes.array.isRequired,
+    inputClassName: PropTypes.string,
+    logEvents: PropTypes.bool
 };
 
 export default MortgageCalculator;

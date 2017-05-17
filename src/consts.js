@@ -6,3 +6,12 @@ export const SECTION = {
     CreditRate: 'CreditRate',
     MonthlyPayment: 'MonthlyPayment'
 }
+
+export const SECTION_CAMEL_CASE = {
+    ApartmentPrice: 'apartmentPrice',
+    FirstPayment: 'firstPayment',
+    CreditSum: 'creditSum',
+    CreditDuration: 'creditDuration',
+    CreditRate: 'creditRate',
+    MonthlyPayment: 'monthlyPayment'
+}

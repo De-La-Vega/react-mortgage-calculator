@@ -18,7 +18,10 @@ export default class App extends React.Component {
                 <div className="form-horizontal">
                     <div className="row">
 
-                        <MortgageCalculator>
+                        <MortgageCalculator
+                            logEvents
+                            inputClassName="form-control"
+                        >
                             <Section
                                 type="ApartmentPrice"
                                 render={(input, slider) => {

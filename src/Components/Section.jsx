@@ -36,9 +36,35 @@ export default class Section extends React.Component {
         return result;
     }
 
+    /**
+     * Getting slider step for section.
+     * 
+     * @param {string} type section name
+     * @returns {number} step
+     */
+    getSliderStep (type) {
+        let step = 1;
+
+        switch (type) {
+            case SECTION.CreditSum:
+            case SECTION.MonthlyPayment:
+            case SECTION.ApartmentPrice:
+            case SECTION.FirstPayment:
+                step = 1000;
+                break;
+            case SECTION.CreditDuration:
+            case SECTION.CreditRate:
+            default:
+                step = 1;
+                break;
+        }
+
+        return step;
+    }
+
     render () {
         const {
-            placeholder, className, onChange, render, type,
+            placeholder, inputClassName, checkboxClassName, onChange, render, type,
             inputValue, sliderMinValue, sliderMaxValue, sliderCurrentValue, checkboxValue
         } = this.props;
 
@@ -46,13 +72,14 @@ export default class Section extends React.Component {
             <Input
                 disabled={checkboxValue}
                 value={inputValue}
-                className={className}
+                className={inputClassName}
                 placeholder={placeholder}
                 onChange={(value) => onChange(type, 'Input', value)}
             />
         );
         const slider = (
             <Slider
+                step={this.getSliderStep(type)}
                 disabled={checkboxValue}
                 min={sliderMinValue}
                 max={sliderMaxValue}
@@ -62,7 +89,7 @@ export default class Section extends React.Component {
         );
         const checkbox = this.hasCheckbox(type) ? (
             <Checkbox
-                className={className}
+                className={checkboxClassName}
                 isChecked={checkboxValue}
                 onChange={(value) => onChange(type, 'Checkbox', value)}
             />
@@ -81,7 +108,8 @@ export default class Section extends React.Component {
 Section.propTypes = {
     type: PropTypes.string,
     placeholder: PropTypes.string,
-    className: PropTypes.string,
+    inputClassName: PropTypes.string,
+    checkboxClassName: PropTypes.string,
     onChange: PropTypes.func,
     render: PropTypes.func,
     inputValue: PropTypes.number,
