@@ -13,7 +13,7 @@ export default class Input extends React.Component {
                 type="text"
                 className={className}
                 placeholder={placeholder}
-                value={value.toFixed(0)}
+                value={value}
                 disabled={disabled}
             />
         );

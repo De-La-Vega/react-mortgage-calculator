@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
-import {SECTION} from './../consts';
+import {APARTMENT_PRICE, FIRST_PAYMENT, CREDIT_SUM, CREDIT_DURATION, CREDIT_RATE, MONTHLY_PAYMENT} from './../consts';
 
 import Input from '../Components/Input';
 import Checkbox from "../Components/Checkbox";
@@ -20,14 +20,14 @@ export default class Section extends React.Component {
         let result = false;
 
         switch (type) {
-            case SECTION.CreditSum:
-            case SECTION.CreditDuration:
-            case SECTION.MonthlyPayment:
+            case CREDIT_SUM:
+            case CREDIT_DURATION:
+            case MONTHLY_PAYMENT:
                 result = true;
                 break;
-            case SECTION.ApartmentPrice:
-            case SECTION.FirstPayment:
-            case SECTION.CreditRate:
+            case APARTMENT_PRICE:
+            case FIRST_PAYMENT:
+            case CREDIT_RATE:
             default:
                 result = false;
                 break;
@@ -46,14 +46,14 @@ export default class Section extends React.Component {
         let step = 1;
 
         switch (type) {
-            case SECTION.CreditSum:
-            case SECTION.MonthlyPayment:
-            case SECTION.ApartmentPrice:
-            case SECTION.FirstPayment:
+            case CREDIT_SUM:
+            case MONTHLY_PAYMENT:
+            case APARTMENT_PRICE:
+            case FIRST_PAYMENT:
                 step = 1000;
                 break;
-            case SECTION.CreditDuration:
-            case SECTION.CreditRate:
+            case CREDIT_DURATION:
+            case CREDIT_RATE:
             default:
                 step = 1;
                 break;

@@ -1,4 +1,4 @@
-import {SECTION, SECTION_CAMEL_CASE} from './../consts';
+import {APARTMENT_PRICE, FIRST_PAYMENT, CREDIT_SUM, CREDIT_DURATION, CREDIT_RATE, MONTHLY_PAYMENT} from './../consts';
 
 import {calcAnnuitet, calcDuration} from './Utils';
 
@@ -9,9 +9,9 @@ import {calcAnnuitet, calcDuration} from './Utils';
  * @returns {number} new value
  */
 function recalcCreditSum (state) {
-    const monthlyPayment = state[SECTION_CAMEL_CASE.MonthlyPayment];
-    const creditRate = state[SECTION_CAMEL_CASE.CreditRate];
-    const creditDuration = state[SECTION_CAMEL_CASE.CreditDuration];
+    const monthlyPayment = state[MONTHLY_PAYMENT];
+    const creditRate = state[CREDIT_RATE];
+    const creditDuration = state[CREDIT_DURATION];
 
     return monthlyPayment.current / calcAnnuitet(creditRate.current, creditDuration.current);
 }
@@ -23,9 +23,9 @@ function recalcCreditSum (state) {
  * @returns {number} new value
  */
 function recalcCreditDuration (state) {
-    const creditSum = state[SECTION_CAMEL_CASE.CreditSum];
-    const monthlyPayment = state[SECTION_CAMEL_CASE.MonthlyPayment];
-    const creditRate = state[SECTION_CAMEL_CASE.CreditRate];
+    const creditSum = state[CREDIT_SUM];
+    const monthlyPayment = state[MONTHLY_PAYMENT];
+    const creditRate = state[CREDIT_RATE];
 
     return calcDuration(creditSum.current, monthlyPayment.current, creditRate.current);
 }
@@ -37,9 +37,9 @@ function recalcCreditDuration (state) {
  * @returns {number} new value
  */
 function recalcMonthlyPayment (state) {
-    const creditSum = state[SECTION_CAMEL_CASE.CreditSum];
-    const creditRate = state[SECTION_CAMEL_CASE.CreditRate];
-    const creditDuration = state[SECTION_CAMEL_CASE.CreditDuration];
+    const creditSum = state[CREDIT_SUM];
+    const creditRate = state[CREDIT_RATE];
+    const creditDuration = state[CREDIT_DURATION];
 
     return creditSum.current * calcAnnuitet(creditRate.current, creditDuration.current);
 }
@@ -53,10 +53,10 @@ function recalcMonthlyPayment (state) {
  */
 function onUpdateApartmentPrice (prevState, value) {
     let newState = prevState;
-    let newValueApartmentPrice = newState[SECTION_CAMEL_CASE.ApartmentPrice];
-    let newValueFirstPayment = newState[SECTION_CAMEL_CASE.FirstPayment];
-    let newValueCreditSum = newState[SECTION_CAMEL_CASE.CreditSum];
-    let newValueMonthlyPayment = newState[SECTION_CAMEL_CASE.MonthlyPayment];
+    let newValueApartmentPrice = newState[APARTMENT_PRICE];
+    let newValueFirstPayment = newState[FIRST_PAYMENT];
+    let newValueCreditSum = newState[CREDIT_SUM];
+    let newValueMonthlyPayment = newState[MONTHLY_PAYMENT];
 
     newValueApartmentPrice.current = value;
     newValueFirstPayment.max = value;
@@ -72,10 +72,10 @@ function onUpdateApartmentPrice (prevState, value) {
     newValueMonthlyPayment.current = recalcMonthlyPayment(newState);
 
     return {
-        [SECTION_CAMEL_CASE.ApartmentPrice]: newValueApartmentPrice,
-        [SECTION_CAMEL_CASE.FirstPayment]: newValueFirstPayment,
-        [SECTION_CAMEL_CASE.CreditSum]: newValueCreditSum,
-        [SECTION_CAMEL_CASE.MonthlyPayment]: newValueMonthlyPayment
+        [APARTMENT_PRICE]: newValueApartmentPrice,
+        [FIRST_PAYMENT]: newValueFirstPayment,
+        [CREDIT_SUM]: newValueCreditSum,
+        [MONTHLY_PAYMENT]: newValueMonthlyPayment
     }
 }
 
@@ -88,10 +88,10 @@ function onUpdateApartmentPrice (prevState, value) {
  */
 function onUpdateFirstPayment (prevState, value) {
     let newState = prevState;
-    let newValueApartmentPrice = newState[SECTION_CAMEL_CASE.ApartmentPrice];
-    let newValueFirstPayment = newState[SECTION_CAMEL_CASE.FirstPayment];
-    let newValueCreditSum = newState[SECTION_CAMEL_CASE.CreditSum];
-    let newValueMonthlyPayment = newState[SECTION_CAMEL_CASE.MonthlyPayment];
+    let newValueApartmentPrice = newState[APARTMENT_PRICE];
+    let newValueFirstPayment = newState[FIRST_PAYMENT];
+    let newValueCreditSum = newState[CREDIT_SUM];
+    let newValueMonthlyPayment = newState[MONTHLY_PAYMENT];
 
     newValueFirstPayment.current = value;
 
@@ -104,10 +104,10 @@ function onUpdateFirstPayment (prevState, value) {
     newValueMonthlyPayment.current = recalcMonthlyPayment(newState);
 
     return {
-        [SECTION_CAMEL_CASE.ApartmentPrice]: newValueApartmentPrice,
-        [SECTION_CAMEL_CASE.FirstPayment]: newValueFirstPayment,
-        [SECTION_CAMEL_CASE.CreditSum]: newValueCreditSum,
-        [SECTION_CAMEL_CASE.MonthlyPayment]: newValueMonthlyPayment
+        [APARTMENT_PRICE]: newValueApartmentPrice,
+        [FIRST_PAYMENT]: newValueFirstPayment,
+        [CREDIT_SUM]: newValueCreditSum,
+        [MONTHLY_PAYMENT]: newValueMonthlyPayment
     }
 }
 
@@ -120,11 +120,11 @@ function onUpdateFirstPayment (prevState, value) {
  */
 function onUpdateCreditSum (prevState, value) {
     let newState = prevState;
-    let newValueApartmentPrice = newState[SECTION_CAMEL_CASE.ApartmentPrice];
-    let newValueFirstPayment = newState[SECTION_CAMEL_CASE.FirstPayment];
-    let newValueCreditSum = newState[SECTION_CAMEL_CASE.CreditSum];
-    let newValueCreditDuration = newState[SECTION_CAMEL_CASE.CreditDuration];
-    let newValueMonthlyPayment = newState[SECTION_CAMEL_CASE.MonthlyPayment];
+    let newValueApartmentPrice = newState[APARTMENT_PRICE];
+    let newValueFirstPayment = newState[FIRST_PAYMENT];
+    let newValueCreditSum = newState[CREDIT_SUM];
+    let newValueCreditDuration = newState[CREDIT_DURATION];
+    let newValueMonthlyPayment = newState[MONTHLY_PAYMENT];
 
     newValueCreditSum.current = value;
     newValueFirstPayment.current = newValueApartmentPrice.current - value;
@@ -136,11 +136,11 @@ function onUpdateCreditSum (prevState, value) {
     }
 
     return {
-        [SECTION_CAMEL_CASE.ApartmentPrice]: newValueApartmentPrice,
-        [SECTION_CAMEL_CASE.FirstPayment]: newValueFirstPayment,
-        [SECTION_CAMEL_CASE.CreditSum]: newValueCreditSum,
-        [SECTION_CAMEL_CASE.CreditDuration]: newValueCreditDuration,
-        [SECTION_CAMEL_CASE.MonthlyPayment]: newValueMonthlyPayment
+        [APARTMENT_PRICE]: newValueApartmentPrice,
+        [FIRST_PAYMENT]: newValueFirstPayment,
+        [CREDIT_SUM]: newValueCreditSum,
+        [CREDIT_DURATION]: newValueCreditDuration,
+        [MONTHLY_PAYMENT]: newValueMonthlyPayment
     }
 }
 
@@ -153,9 +153,9 @@ function onUpdateCreditSum (prevState, value) {
  */
 function onUpdateCreditDuration (prevState, value) {
     let newState = prevState;
-    let newValueCreditSum = newState[SECTION_CAMEL_CASE.CreditSum];
-    let newValueCreditDuration = newState[SECTION_CAMEL_CASE.CreditDuration];
-    let newValueMonthlyPayment = newState[SECTION_CAMEL_CASE.MonthlyPayment];
+    let newValueCreditSum = newState[CREDIT_SUM];
+    let newValueCreditDuration = newState[CREDIT_DURATION];
+    let newValueMonthlyPayment = newState[MONTHLY_PAYMENT];
 
     newValueCreditDuration.current = value;
 
@@ -166,9 +166,9 @@ function onUpdateCreditDuration (prevState, value) {
     }
 
     return {
-        [SECTION_CAMEL_CASE.CreditSum]: newValueCreditSum,
-        [SECTION_CAMEL_CASE.CreditDuration]: newValueCreditDuration,
-        [SECTION_CAMEL_CASE.MonthlyPayment]: newValueMonthlyPayment
+        [CREDIT_SUM]: newValueCreditSum,
+        [CREDIT_DURATION]: newValueCreditDuration,
+        [MONTHLY_PAYMENT]: newValueMonthlyPayment
     }
 }
 
@@ -181,10 +181,10 @@ function onUpdateCreditDuration (prevState, value) {
  */
 function onUpdateCreditRate (prevState, value) {
     let newState = prevState;
-    let newValueCreditSum = newState[SECTION_CAMEL_CASE.CreditSum];
-    let newValueCreditDuration = newState[SECTION_CAMEL_CASE.CreditDuration];
-    let newValueCreditRate = newState[SECTION_CAMEL_CASE.CreditRate];
-    let newValueMonthlyPayment = newState[SECTION_CAMEL_CASE.MonthlyPayment];
+    let newValueCreditSum = newState[CREDIT_SUM];
+    let newValueCreditDuration = newState[CREDIT_DURATION];
+    let newValueCreditRate = newState[CREDIT_RATE];
+    let newValueMonthlyPayment = newState[MONTHLY_PAYMENT];
 
     newValueCreditRate.current = value;
 
@@ -198,10 +198,10 @@ function onUpdateCreditRate (prevState, value) {
     }
 
     return {
-        [SECTION_CAMEL_CASE.CreditSum]: newValueCreditSum,
-        [SECTION_CAMEL_CASE.CreditDuration]: newValueCreditDuration,
-        [SECTION_CAMEL_CASE.CreditRate]: newValueCreditRate,
-        [SECTION_CAMEL_CASE.MonthlyPayment]: newValueMonthlyPayment
+        [CREDIT_SUM]: newValueCreditSum,
+        [CREDIT_DURATION]: newValueCreditDuration,
+        [CREDIT_RATE]: newValueCreditRate,
+        [MONTHLY_PAYMENT]: newValueMonthlyPayment
     }
 }
 
@@ -214,9 +214,9 @@ function onUpdateCreditRate (prevState, value) {
  */
 function onUpdateMonthlyPayment (prevState, value) {
     let newState = prevState;
-    let newValueCreditSum = newState[SECTION_CAMEL_CASE.CreditSum];
-    let newValueCreditDuration = newState[SECTION_CAMEL_CASE.CreditDuration];
-    let newValueMonthlyPayment = newState[SECTION_CAMEL_CASE.MonthlyPayment];
+    let newValueCreditSum = newState[CREDIT_SUM];
+    let newValueCreditDuration = newState[CREDIT_DURATION];
+    let newValueMonthlyPayment = newState[MONTHLY_PAYMENT];
 
     newValueMonthlyPayment.current = value;
 
@@ -227,9 +227,9 @@ function onUpdateMonthlyPayment (prevState, value) {
     }
 
     return {
-        [SECTION_CAMEL_CASE.CreditSum]: newValueCreditSum,
-        [SECTION_CAMEL_CASE.CreditDuration]: newValueCreditDuration,
-        [SECTION_CAMEL_CASE.MonthlyPayment]: newValueMonthlyPayment
+        [CREDIT_SUM]: newValueCreditSum,
+        [CREDIT_DURATION]: newValueCreditDuration,
+        [MONTHLY_PAYMENT]: newValueMonthlyPayment
     }
 }
 
@@ -245,22 +245,22 @@ export function updateState (prevState, sectionName, value) {
     let result = null;
 
     switch (sectionName) {
-        case SECTION.ApartmentPrice:
+        case APARTMENT_PRICE:
             result = onUpdateApartmentPrice(prevState, value);
             break;
-        case SECTION.FirstPayment:
+        case FIRST_PAYMENT:
             result = onUpdateFirstPayment(prevState, value);
             break;
-        case SECTION.CreditSum:
+        case CREDIT_SUM:
             result = onUpdateCreditSum(prevState, value);
             break;
-        case SECTION.CreditDuration:
+        case CREDIT_DURATION:
             result = onUpdateCreditDuration(prevState, value);
             break;
-        case SECTION.CreditRate:
+        case CREDIT_RATE:
             result = onUpdateCreditRate(prevState, value);
             break;
-        case SECTION.MonthlyPayment:
+        case MONTHLY_PAYMENT:
             result = onUpdateMonthlyPayment(prevState, value);
             break;
         default:
